@@ -1,0 +1,12 @@
+# Optional packages for FID, Inception Score, precision, and recall evaluation.
+numpy
+Pillow
+scipy
+scikit-image
+lpips
+torchvision
+pytorch-fid
+
+# Required only when running: EVAL_BACKEND=tf EVAL_DEVICE=cpu.
+# On aarch64 Linux, install tensorflow rather than tensorflow-cpu.
+tensorflow>=2.16,<2.17

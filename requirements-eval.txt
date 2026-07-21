@@ -1,0 +1,17 @@
+# Install these into the existing Ascend/PyTorch environment when needed.
+# Do not install torch or torch-npu from this file; they must match the local Ascend runtime.
+deepspeed
+einops
+numpy
+torchvision
+PyYAML
+tqdm
+huggingface-hub
+omegaconf
+lightning
+opencv-python-headless
+imageio
+Pillow
+scipy
+scikit-image
+lpips

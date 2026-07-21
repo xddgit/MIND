@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+eval_outputs/
+logs/
+hf_cache/
+kernel_meta/
+verify/
+*.pkl
+.DS_Store
+
+# Downloaded model and evaluation assets.
+GigaTok/results/ckpts/*.pt
+VIRTUAL_imagenet256_labeled.npz
+classify_image_graph_def.pb
+*.fid_stats_cache_*.pkl
