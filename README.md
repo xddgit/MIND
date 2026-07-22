@@ -1,4 +1,4 @@
-# ImageNet-64 Generation and Evaluation
+# ImageNet Generation and Evaluation
 
 This package contains the code and assets needed to reproduce MIND-B samples from the released checkpoint and evaluate them with FID, Inception Score, precision, and recall.
 
