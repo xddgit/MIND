@@ -309,8 +309,87 @@ export default function Home() {
         <div className="hero-index">01</div>
       </section>
 
-      <section className="statement" id="overview">
+      <section className="method-intro" id="method">
         <div className="section-number">01</div>
+        <div className="section-kicker">Method · At a glance</div>
+        <div className="method-intro-heading">
+          <h2>Diffuse through a<br />parameterized manifold.</h2>
+          <div>
+            <p className="lead">
+              MIND explicitly brings the geometry of the image data manifold
+              into a continuous diffusion model.
+            </p>
+            <p>
+              A tokenizer first maps images to discrete patch tokens. Their
+              embeddings define a compact parameterization space in which the
+              score network learns to denoise, reducing the metric entropy of
+              the learning problem while retaining parallel generation.
+            </p>
+          </div>
+        </div>
+
+        <figure className="method-figure">
+          <div className="method-figure-scroll">
+            <img
+              src="/assets/mind/figure1-extended.png"
+              alt="MIND overview showing manifold-aware training, multi-stage inference, one-step FD distillation, and one-step inference"
+            />
+          </div>
+          <figcaption>
+            <span>Figure 01 · Complete MIND pipeline</span>
+            <span>Training · Inference · One-step distillation</span>
+          </figcaption>
+        </figure>
+
+        <div className="pipeline-guide">
+          <article>
+            <span>A</span>
+            <h3>Manifold-aware training</h3>
+            <p>
+              Discrete tokens are projected into a continuous parameterized
+              manifold. Forward diffusion produces noisy latents; a DiT predicts
+              logits that are supervised through CE and manifold-space MSE losses.
+            </p>
+          </article>
+          <article>
+            <span>B</span>
+            <h3>Multi-stage inference</h3>
+            <p>
+              Sampling changes with timestep: differentiable soft sampling,
+              entropy-driven hybrid sampling, and greedy projection guide the
+              latent toward valid discrete tokens before decoding.
+            </p>
+          </article>
+          <article>
+            <span>C</span>
+            <h3>One-step FD distillation</h3>
+            <p>
+              Conditional and unconditional predictions are combined by CFG.
+              A greedy straight-through estimator preserves gradients through
+              token selection and the decoder to optimize the FD loss.
+            </p>
+          </article>
+          <article>
+            <span>D</span>
+            <h3>One-step inference</h3>
+            <p>
+              The distilled model maps initial noise to token logits in one
+              network evaluation. Greedy sampling and the tokenizer decoder
+              directly produce the final image.
+            </p>
+          </article>
+        </div>
+
+        <div className="contribution-strip">
+          <div><strong>Lower metric entropy</strong><span>Explicit manifold parameterization</span></div>
+          <div><strong>Soft top-k</strong><span>End-to-end differentiable token projection</span></div>
+          <div><strong>High-frequency branches</strong><span>Reduced transformer spectral bias</span></div>
+          <div><strong>Greedy STE + FD</strong><span>Differentiable one-step generation</span></div>
+        </div>
+      </section>
+
+      <section className="statement" id="overview">
+        <div className="section-number">02</div>
         <div className="section-kicker">Overview · Abstract</div>
         <div className="statement-grid">
           <h2>A geometry-aware route from noise to image.</h2>
@@ -331,18 +410,24 @@ export default function Home() {
               spectral bias of transformer backbones. At inference, multi-stage
               transition sampling adapts the sampling behavior over time.
             </p>
+            <p>
+              For acceleration, one-step differentiable distillation combines
+              greedy straight-through token selection with the FD loss. MIND-XL-G
+              reaches FID 1.84, while the distilled one-step model reaches FID
+              0.90; MIND-XL-G also records 4.87 on the comprehensive FDr⁶ metric.
+            </p>
           </div>
         </div>
         <div className="metric-strip" aria-label="Headline results">
           <div><strong>0.90</strong><span>FID · one-step</span></div>
           <div><strong>1.84</strong><span>FID · 250-step</span></div>
-          <div><strong>600M</strong><span>Parameters</span></div>
+          <div><strong>4.87</strong><span>FDr⁶ · MIND-XL-G</span></div>
           <div><strong>256²</strong><span>ImageNet resolution</span></div>
         </div>
       </section>
 
-      <section className="method" id="method">
-        <div className="section-number">02</div>
+      <section className="method" id="mechanisms">
+        <div className="section-number">03</div>
         <div className="section-kicker">Architecture · Key ideas</div>
         <div className="method-heading">
           <h2>Discrete structure.<br />Continuous motion.</h2>
@@ -389,7 +474,7 @@ export default function Home() {
       </section>
 
       <section className="process" id="process">
-        <div className="section-number">03</div>
+        <div className="section-number">04</div>
         <div className="section-kicker">Recorded run · Sampling trajectory</div>
         <div className="process-heading">
           <h2>Inside fifteen<br />MIND samples.</h2>
@@ -408,7 +493,7 @@ export default function Home() {
       </section>
 
       <section className="results" id="results">
-        <div className="section-number">04</div>
+        <div className="section-number">05</div>
         <div className="section-kicker">Generated samples · MIND-B</div>
         <div className="results-heading">
           <h2>Compact model.<br />High-fidelity manifold.</h2>
