@@ -22,13 +22,46 @@ function RecordedTrajectory() {
   const lastAdvanceRef = useRef(0);
   const [active, setActive] = useState(0);
   const [sample, setSample] = useState(0);
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
+  const [loadedSample, setLoadedSample] = useState<number | null>(null);
+  const [loadProgress, setLoadProgress] = useState(0);
 
   useEffect(() => {
-    if (!playing) return;
+    let cancelled = false;
+    let loaded = 0;
+    setPlaying(false);
+    setLoadedSample(null);
+    setLoadProgress(0);
+    setActive(0);
+    lastAdvanceRef.current = 0;
+
+    const sampleName = `sample_${String(sample).padStart(2, "0")}`;
+    Array.from({ length: 250 }, (_, index) => index + 1).forEach((step) => {
+      const image = new Image();
+      const complete = () => {
+        if (cancelled) return;
+        loaded += 1;
+        setLoadProgress(loaded);
+        if (loaded === 250) {
+          setLoadedSample(sample);
+          setPlaying(true);
+        }
+      };
+      image.onload = complete;
+      image.onerror = complete;
+      image.src = `/assets/mind/trajectories/${sampleName}/frame_${String(step).padStart(3, "0")}.jpg`;
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [sample]);
+
+  useEffect(() => {
+    if (!playing || loadedSample !== sample) return;
     const animate = (time: number) => {
       if (!lastAdvanceRef.current) lastAdvanceRef.current = time;
-      if (time - lastAdvanceRef.current > 120) {
+      if (time - lastAdvanceRef.current > 140) {
         setActive((value) => (value + 1) % 250);
         lastAdvanceRef.current = time;
       }
@@ -38,7 +71,7 @@ function RecordedTrajectory() {
     return () => {
       if (frameRef.current) cancelAnimationFrame(frameRef.current);
     };
-  }, [playing]);
+  }, [playing, loadedSample, sample]);
 
   const step = active + 1;
   const phase = step <= 25 ? "soft-argmax" : step >= 226 ? "greedy" : "sampled";
@@ -51,9 +84,17 @@ function RecordedTrajectory() {
     <div className="recorded-shell">
       <div className="recorded-visual">
         <img
+          key={`${sample}-${step}`}
           src={`/assets/mind/trajectories/${sampleName}/${frameName}`}
           alt={`Decoded token prediction for trajectory ${sample + 1} at sampling step ${step}`}
         />
+        {loadedSample !== sample && (
+          <div className="trajectory-loading" role="status">
+            <span>Loading complete trajectory</span>
+            <strong>{Math.round((loadProgress / 250) * 100)}%</strong>
+            <i><b style={{ width: `${(loadProgress / 250) * 100}%` }} /></i>
+          </div>
+        )}
         <div className="recorded-badge">v90.31 recorded run · {sample + 1}/15</div>
         <div className="recorded-step">
           <strong>{String(step).padStart(3, "0")}</strong>
@@ -72,8 +113,6 @@ function RecordedTrajectory() {
               className={sample === index ? "active" : ""}
               onClick={() => {
                 setSample(index);
-                setActive(0);
-                lastAdvanceRef.current = 0;
               }}
             >
               <img
@@ -103,9 +142,10 @@ function RecordedTrajectory() {
         </div>
         <div className="recorded-controls">
           <button className="play-button" onClick={() => {
+            if (loadedSample !== sample) return;
             lastAdvanceRef.current = 0;
             setPlaying((value) => !value);
-          }}>
+          }} disabled={loadedSample !== sample}>
             {playing ? "Pause" : "Play"} <span>{playing ? "Ⅱ" : "▶"}</span>
           </button>
           <input

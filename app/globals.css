@@ -143,6 +143,11 @@ img { display: block; max-width: 100%; }
 .recorded-shell { margin-top: 70px; display: grid; grid-template-columns: minmax(440px, 1.06fr) minmax(420px, .94fr); min-height: 690px; border: 1px solid var(--ink); background: var(--paper); }
 .recorded-visual { min-height: 690px; position: relative; overflow: hidden; background: #232320; }
 .recorded-visual img { width: 100%; height: 100%; object-fit: cover; transition: opacity .16s ease; }
+.trajectory-loading { position: absolute; z-index: 4; inset: 0; padding: 28px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(23,23,20,.9); color: white; text-align: center; }
+.trajectory-loading span { font-size: 9px; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+.trajectory-loading strong { margin-top: 10px; font: italic 58px Georgia, serif; }
+.trajectory-loading > i { width: min(300px, 72%); height: 4px; margin-top: 16px; overflow: hidden; background: rgba(255,255,255,.22); }
+.trajectory-loading > i b { display: block; height: 100%; background: var(--acid); transition: width .12s linear; }
 .recorded-badge { position: absolute; left: 18px; top: 18px; padding: 8px 10px; background: var(--acid); font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
 .recorded-step { position: absolute; right: 18px; bottom: 14px; display: flex; align-items: baseline; gap: 7px; color: white; text-shadow: 0 2px 18px #000; }
 .recorded-step strong { font: italic clamp(58px, 7vw, 110px) Georgia, serif; letter-spacing: -.06em; }
@@ -169,6 +174,7 @@ img { display: block; max-width: 100%; }
 .phase-bar button.active { background: var(--ink); color: white; border-color: var(--ink); }
 .recorded-controls { margin-top: auto; padding-top: 20px; display: grid; grid-template-columns: 110px 1fr auto; gap: 16px; align-items: center; }
 .play-button { cursor: pointer; min-width: 110px; padding: 12px; border: 1px solid var(--ink); background: var(--ink); color: white; display: flex; justify-content: space-between; }
+.play-button:disabled { cursor: wait; opacity: .5; }
 .recorded-controls input { width: 100%; accent-color: var(--ink); }
 .cfg-status { padding: 7px 9px; border: 1px solid var(--line); color: var(--muted); font-size: 9px; font-weight: 800; text-transform: uppercase; white-space: nowrap; }
 .cfg-status.active { border-color: var(--ink); background: var(--acid); color: var(--ink); }
