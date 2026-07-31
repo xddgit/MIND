@@ -13,6 +13,8 @@ const phaseLabels: Record<string, string> = {
   greedy: "Original greedy sampling",
 };
 
+const trajectorySamples = [1, 5, 6, 8, 12];
+
 function ArrowIcon() {
   return <span aria-hidden="true">↗</span>;
 }
@@ -22,7 +24,7 @@ function RecordedTrajectory() {
   const lastAdvanceRef = useRef(0);
   const trajectoryCacheRef = useRef<HTMLImageElement[]>([]);
   const [active, setActive] = useState(0);
-  const [sample, setSample] = useState(0);
+  const [sample, setSample] = useState(trajectorySamples[0]);
   const [playing, setPlaying] = useState(false);
   const [loadedSample, setLoadedSample] = useState<number | null>(null);
   const [loadProgress, setLoadProgress] = useState(0);
@@ -101,7 +103,7 @@ function RecordedTrajectory() {
             <i><b style={{ width: `${(loadProgress / 250) * 100}%` }} /></i>
           </div>
         )}
-        <div className="recorded-badge">v90.31 recorded run · {sample + 1}/15</div>
+        <div className="recorded-badge">v90.31 recorded run · sample {sample + 1}</div>
         <div className="recorded-step">
           <strong>{String(step).padStart(3, "0")}</strong>
           <span>/ 250</span>
@@ -112,8 +114,8 @@ function RecordedTrajectory() {
           <span>Current sampler state</span>
           <strong>{phaseLabels[phase]}</strong>
         </div>
-        <div className="trajectory-picker" aria-label="Choose one of fifteen recorded generations">
-          {Array.from({ length: 15 }, (_, index) => (
+        <div className="trajectory-picker" aria-label="Choose one of five recorded generations">
+          {trajectorySamples.map((index) => (
             <button
               key={index}
               className={sample === index ? "active" : ""}
@@ -488,9 +490,9 @@ export default function Home() {
         <div className="section-number">03</div>
         <div className="section-kicker">Recorded run · Sampling trajectory</div>
         <div className="process-heading">
-          <h2>Inside fifteen<br />MIND samples.</h2>
+          <h2>Inside five<br />MIND samples.</h2>
           <p>
-            Fifteen real 250-step generations from the v90.31 checkpoint. Every
+            Five selected 250-step generations from the v90.31 checkpoint. Every
             frame decodes the token prediction recorded at that exact step.
           </p>
         </div>
