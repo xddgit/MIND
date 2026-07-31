@@ -302,6 +302,7 @@ export default function Home() {
           <a href="#mechanisms">Architecture</a>
           <a href="#process">Process</a>
           <a href="#results">Results</a>
+          <a href="https://github.com/xddgit/MIND" target="_blank" rel="noreferrer">GitHub</a>
         </nav>
         <a
           className="header-paper"
@@ -344,6 +345,14 @@ export default function Home() {
               rel="noreferrer"
             >
               Read paper <ArrowIcon />
+            </a>
+            <a
+              className="secondary-action"
+              href="https://github.com/xddgit/MIND"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub <ArrowIcon />
             </a>
           </div>
         </div>
@@ -547,6 +556,9 @@ export default function Home() {
         <div className="conclusion-actions">
           <a href="https://arxiv.org/abs/2606.00094" target="_blank" rel="noreferrer">
             arXiv paper <ArrowIcon />
+          </a>
+          <a href="https://github.com/xddgit/MIND" target="_blank" rel="noreferrer">
+            GitHub code <ArrowIcon />
           </a>
           <a href="#top">Back to top ↑</a>
         </div>
