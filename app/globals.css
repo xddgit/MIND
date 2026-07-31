@@ -130,9 +130,12 @@ img { display: block; max-width: 100%; }
 .recorded-data { min-width: 0; padding: 28px; display: flex; flex-direction: column; }
 .recorded-data-head { display: flex; justify-content: space-between; gap: 20px; padding-bottom: 17px; border-bottom: 1px solid var(--line); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
 .recorded-data-head strong { color: #6d6d64; text-align: right; }
-.trajectory-chart { height: 260px; margin-top: 24px; position: relative; border: 1px solid var(--line); background: #e7e5dd; }
-.trajectory-canvas { display: block; width: 100%; height: 100%; }
-.trajectory-chart > span { position: absolute; left: 12px; top: 10px; padding: 5px 7px; background: var(--paper); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+.trajectory-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 24px; }
+.trajectory-picker button { position: relative; aspect-ratio: 1; overflow: hidden; padding: 0; cursor: pointer; border: 1px solid var(--line); background: #e7e5dd; }
+.trajectory-picker button img { display: block; width: 100%; height: 100%; object-fit: cover; filter: saturate(.72); }
+.trajectory-picker button span { position: absolute; right: 4px; bottom: 3px; padding: 2px 4px; background: rgba(23,23,20,.82); color: white; font-size: 8px; font-weight: 800; }
+.trajectory-picker button.active { border: 3px solid var(--ink); }
+.trajectory-picker button.active img { filter: saturate(1); }
 .axis-label { position: absolute; color: #74746c; font-size: 8px; font-weight: 800; }
 .axis-x { right: 8px; bottom: 6px; }
 .axis-y { left: 7px; bottom: 8px; writing-mode: vertical-rl; transform: rotate(180deg); }
