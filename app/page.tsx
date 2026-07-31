@@ -20,6 +20,7 @@ function ArrowIcon() {
 function RecordedTrajectory() {
   const frameRef = useRef<number | null>(null);
   const lastAdvanceRef = useRef(0);
+  const trajectoryCacheRef = useRef<HTMLImageElement[]>([]);
   const [active, setActive] = useState(0);
   const [sample, setSample] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -34,6 +35,7 @@ function RecordedTrajectory() {
     setLoadProgress(0);
     setActive(0);
     lastAdvanceRef.current = 0;
+    trajectoryCacheRef.current = [];
 
     const sampleName = `sample_${String(sample).padStart(2, "0")}`;
     Array.from({ length: 250 }, (_, index) => index + 1).forEach((step) => {
@@ -47,9 +49,12 @@ function RecordedTrajectory() {
           setPlaying(true);
         }
       };
-      image.onload = complete;
+      image.onload = () => {
+        image.decode().catch(() => undefined).finally(complete);
+      };
       image.onerror = complete;
       image.src = `/assets/mind/trajectories/${sampleName}/frame_${String(step).padStart(3, "0")}.jpg`;
+      trajectoryCacheRef.current.push(image);
     });
 
     return () => {
@@ -84,9 +89,10 @@ function RecordedTrajectory() {
     <div className="recorded-shell">
       <div className="recorded-visual">
         <img
-          key={`${sample}-${step}`}
           src={`/assets/mind/trajectories/${sampleName}/${frameName}`}
           alt={`Decoded token prediction for trajectory ${sample + 1} at sampling step ${step}`}
+          decoding="sync"
+          fetchPriority="high"
         />
         {loadedSample !== sample && (
           <div className="trajectory-loading" role="status">
@@ -290,8 +296,8 @@ export default function Home() {
           <span>MIND</span>
         </a>
         <nav aria-label="Main navigation">
-          <a href="#overview">Overview</a>
           <a href="#method">Method</a>
+          <a href="#mechanisms">Architecture</a>
           <a href="#process">Process</a>
           <a href="#results">Results</a>
         </nav>
@@ -428,46 +434,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="statement" id="overview">
-        <div className="section-number">02</div>
-        <div className="section-kicker">Overview · Abstract</div>
-        <div className="statement-grid">
-          <h2>A geometry-aware route from noise to image.</h2>
-          <div className="abstract-copy">
-            <p className="lead">
-              Generative models seek to sample from a dense, low-dimensional and
-              compact data manifold. <strong>MIND</strong> makes that geometry explicit.
-            </p>
-            <p>
-              The framework integrates discrete patch tokenization into the score
-              function of a continuous diffusion model, combining the structural
-              quantization of discrete tokens with the parallel generation flexibility
-              of continuous diffusion.
-            </p>
-            <p>
-              A differentiable soft top-k aggregation mechanism enables end-to-end
-              training, while dual-branch high-frequency embeddings counter the
-              spectral bias of transformer backbones. At inference, multi-stage
-              transition sampling adapts the sampling behavior over time.
-            </p>
-            <p>
-              For acceleration, one-step differentiable distillation combines
-              greedy straight-through token selection with the FD loss. MIND-XL-G
-              reaches FID 1.84, while the distilled one-step model reaches FID
-              0.90; MIND-XL-G also records 4.87 on the comprehensive FDr⁶ metric.
-            </p>
-          </div>
-        </div>
-        <div className="metric-strip" aria-label="Headline results">
-          <div><strong>0.90</strong><span>FID · one-step</span></div>
-          <div><strong>1.84</strong><span>FID · 250-step</span></div>
-          <div><strong>4.87</strong><span>FDr⁶ · MIND-XL-G</span></div>
-          <div><strong>256²</strong><span>ImageNet resolution</span></div>
-        </div>
-      </section>
-
       <section className="method" id="mechanisms">
-        <div className="section-number">03</div>
+        <div className="section-number">02</div>
         <div className="section-kicker">Architecture · Key ideas</div>
         <div className="method-heading">
           <h2>Discrete structure.<br />Continuous motion.</h2>
@@ -514,7 +482,7 @@ export default function Home() {
       </section>
 
       <section className="process" id="process">
-        <div className="section-number">04</div>
+        <div className="section-number">03</div>
         <div className="section-kicker">Recorded run · Sampling trajectory</div>
         <div className="process-heading">
           <h2>Inside fifteen<br />MIND samples.</h2>
@@ -533,14 +501,30 @@ export default function Home() {
       </section>
 
       <section className="results" id="results">
-        <div className="section-number">05</div>
-        <div className="section-kicker">Generated samples · MIND-B</div>
+        <div className="section-number">04</div>
+        <div className="section-kicker">Performance · Generated samples</div>
         <div className="results-heading">
-          <h2>Compact model.<br />High-fidelity manifold.</h2>
+          <h2>One manifold.<br />Two sampling regimes.</h2>
           <p>
-            Twenty selected ImageNet generations from the v90.31 step-71K checkpoint.
+            One-step FD distillation prioritizes speed; multi-step MIND-XL-G
+            achieves stronger distributional fidelity on ImageNet 256 × 256.
           </p>
         </div>
+        <div className="performance-compare" aria-label="One-step and multi-step performance comparison">
+          <article>
+            <div className="performance-label"><span>Multi-step</span><b>250 NFE</b></div>
+            <div className="performance-score"><span>FID ↓</span><strong>1.84</strong></div>
+            <div className="performance-score"><span>FDr⁶ ↓</span><strong>4.87</strong></div>
+            <p>MIND-XL-G · 715M parameters</p>
+          </article>
+          <article className="one-step-performance">
+            <div className="performance-label"><span>One-step</span><b>1 NFE</b></div>
+            <div className="performance-score"><span>FID ↓</span><strong>0.90</strong></div>
+            <div className="performance-score"><span>FDr⁶ ↓</span><strong>6.77</strong></div>
+            <p>FD-distilled MIND · 600M parameters</p>
+          </article>
+        </div>
+        <p className="performance-note">FID and FDr⁶: lower is better.</p>
         <div className="gallery">
           {samples.map((src, index) => (
             <button key={src} className="gallery-item" onClick={() => setLightbox(src)}>
