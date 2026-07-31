@@ -128,6 +128,109 @@ function RecordedTrajectory() {
   );
 }
 
+function OneStepShowcase() {
+  const [sample, setSample] = useState(0);
+  const [decoded, setDecoded] = useState(false);
+
+  useEffect(() => {
+    let revealTimer: ReturnType<typeof setTimeout>;
+    let resetTimer: ReturnType<typeof setTimeout>;
+
+    const play = () => {
+      setDecoded(false);
+      revealTimer = setTimeout(() => setDecoded(true), 1100);
+      resetTimer = setTimeout(play, 3600);
+    };
+
+    play();
+    return () => {
+      clearTimeout(revealTimer);
+      clearTimeout(resetTimer);
+    };
+  }, [sample]);
+
+  const samplePath = `/assets/mind/onestep/sample-${String(sample + 1).padStart(2, "0")}`;
+
+  return (
+    <div className="one-step-block">
+      <div className="one-step-heading">
+        <div>
+          <span>One-step generation · 600M</span>
+          <h3>Noise in.<br />Image out.</h3>
+        </div>
+        <p>
+          One network evaluation maps a 16 × 16 × 16 continuous latent-noise
+          state to image-token logits, followed by a single tokenizer decode.
+        </p>
+      </div>
+      <div className="one-step-shell">
+        <div className={decoded ? "one-step-stage decoded" : "one-step-stage"}>
+          <img
+            className="noise-frame"
+            src={`${samplePath}/noise.png`}
+            alt={`Three-channel projection of the initial latent noise for one-step sample ${sample + 1}`}
+          />
+          <img
+            className="decoded-frame"
+            src={`${samplePath}/final.png`}
+            alt={`One-step MIND generation ${sample + 1}`}
+          />
+          <div className="one-step-state">
+            <span>{decoded ? "Output" : "Input"}</span>
+            <strong>{decoded ? "Decoded image" : "Latent noise"}</strong>
+          </div>
+          <div className="one-step-count">01</div>
+        </div>
+        <div className="one-step-data">
+          <div className="one-step-evaluation">
+            <span className={decoded ? "complete" : ""} />
+            <div>
+              <small>Single transition</small>
+              <strong>{decoded ? "Decode complete" : "Model evaluation"}</strong>
+            </div>
+            <b>→</b>
+          </div>
+          <div className="one-step-metrics">
+            <div><span>FID</span><strong>0.90</strong></div>
+            <div><span>Network evaluations</span><strong>1</strong></div>
+            <div><span>CFG</span><strong>1.5×</strong></div>
+            <div><span>Checkpoint</span><strong>260K</strong></div>
+          </div>
+          <div className="one-step-picker" aria-label="Choose one of twenty one-step generations">
+            {Array.from({ length: 20 }, (_, index) => (
+              <button
+                key={index}
+                className={sample === index ? "active" : ""}
+                onClick={() => setSample(index)}
+                aria-label={`Show one-step generation ${index + 1}`}
+              >
+                <img
+                  src={`/assets/mind/onestep/sample-${String(index + 1).padStart(2, "0")}/final.png`}
+                  alt=""
+                  loading="lazy"
+                />
+                <span>{String(index + 1).padStart(2, "0")}</span>
+              </button>
+            ))}
+          </div>
+          <button className="one-step-replay" onClick={() => {
+            setDecoded(false);
+            setTimeout(() => setDecoded(true), 1100);
+          }}>
+            Replay one step <span>↻</span>
+          </button>
+        </div>
+      </div>
+      <p className="visualization-note">
+        The input is an exact three-channel projection of the CUDA latent noise
+        used for each selected result—not simulated image-space noise. The brief
+        transition denotes one model evaluation; no intermediate denoising
+        steps are implied.
+      </p>
+    </div>
+  );
+}
+
 export default function Home() {
   const [lightbox, setLightbox] = useState<string | null>(null);
 
@@ -231,9 +334,9 @@ export default function Home() {
           </div>
         </div>
         <div className="metric-strip" aria-label="Headline results">
-          <div><strong>1.84</strong><span>FID · MIND</span></div>
-          <div><strong>130M</strong><span>Parameters</span></div>
-          <div><strong>1.95</strong><span>FID · MIND-XL</span></div>
+          <div><strong>0.90</strong><span>FID · one-step</span></div>
+          <div><strong>1.84</strong><span>FID · 250-step</span></div>
+          <div><strong>600M</strong><span>Parameters</span></div>
           <div><strong>256²</strong><span>ImageNet resolution</span></div>
         </div>
       </section>
@@ -301,6 +404,7 @@ export default function Home() {
           argmax tokens are decoded only for visualization; from step 26 onward,
           the frames show the tokens selected by the original sampling logic.
         </p>
+        <OneStepShowcase />
       </section>
 
       <section className="results" id="results">
