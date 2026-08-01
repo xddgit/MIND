@@ -1,35 +1,30 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import "./globals.css";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const requestHeaders = await headers();
-  const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
-  const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  const baseUrl = `${protocol}://${host}`;
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://mind-manifold-research.dv6zp9tj87.chatgpt.site";
 
-  return {
+export const metadata: Metadata = {
     title: "MIND · Diffusion on the Data Manifold",
     description:
       "MIND explicitly models data manifold geometry for high-fidelity diffusion image generation.",
     icons: {
-      icon: "/favicon.svg",
-      shortcut: "/favicon.svg",
+      icon: `${basePath}/favicon.svg`,
+      shortcut: `${basePath}/favicon.svg`,
     },
     openGraph: {
       title: "MIND · Diffusion on the Data Manifold",
       description: "Image generation with explicit modeling of data manifold geometry.",
       type: "website",
-      images: [{ url: `${baseUrl}/og.png`, width: 1200, height: 630, alt: "MIND — Diffusion on the Data Manifold" }],
+      images: [{ url: `${siteUrl}${basePath}/og.png`, width: 1200, height: 630, alt: "MIND — Diffusion on the Data Manifold" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "MIND · Diffusion on the Data Manifold",
       description: "Image generation with explicit modeling of data manifold geometry.",
-      images: [`${baseUrl}/og.png`],
+      images: [`${siteUrl}${basePath}/og.png`],
     },
-  };
-}
+};
 
 export default function RootLayout({
   children,

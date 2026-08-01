@@ -2,9 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const assetPath = (path: string) => `${basePath}${path}`;
+
 const samples = Array.from(
   { length: 20 },
-  (_, index) => `/assets/mind/samples/sample-${String(index + 1).padStart(2, "0")}.png`,
+  (_, index) => assetPath(`/assets/mind/samples/sample-${String(index + 1).padStart(2, "0")}.png`),
 );
 
 const phaseLabels: Record<string, string> = {
@@ -55,7 +58,7 @@ function RecordedTrajectory() {
         image.decode().catch(() => undefined).finally(complete);
       };
       image.onerror = complete;
-      image.src = `/assets/mind/trajectories/${sampleName}/frame_${String(step).padStart(3, "0")}.jpg`;
+      image.src = assetPath(`/assets/mind/trajectories/${sampleName}/frame_${String(step).padStart(3, "0")}.jpg`);
       trajectoryCacheRef.current.push(image);
     });
 
@@ -91,7 +94,7 @@ function RecordedTrajectory() {
     <div className="recorded-shell">
       <div className="recorded-visual">
         <img
-          src={`/assets/mind/trajectories/${sampleName}/${frameName}`}
+          src={assetPath(`/assets/mind/trajectories/${sampleName}/${frameName}`)}
           alt={`Decoded token prediction for trajectory ${sample + 1} at sampling step ${step}`}
           decoding="sync"
           fetchPriority="high"
@@ -124,7 +127,7 @@ function RecordedTrajectory() {
               }}
             >
               <img
-                src={`/assets/mind/trajectories/sample_${String(index).padStart(2, "0")}/frame_250.jpg`}
+                src={assetPath(`/assets/mind/trajectories/sample_${String(index).padStart(2, "0")}/frame_250.jpg`)}
                 alt=""
               />
               <span>{String(index + 1).padStart(2, "0")}</span>
@@ -197,7 +200,7 @@ function OneStepShowcase() {
     };
   }, [sample]);
 
-  const samplePath = `/assets/mind/onestep/sample-${String(sample + 1).padStart(2, "0")}`;
+  const samplePath = assetPath(`/assets/mind/onestep/sample-${String(sample + 1).padStart(2, "0")}`);
 
   return (
     <div className="one-step-block">
@@ -253,7 +256,7 @@ function OneStepShowcase() {
                 aria-label={`Show one-step generation ${index + 1}`}
               >
                 <img
-                  src={`/assets/mind/onestep/sample-${String(index + 1).padStart(2, "0")}/final.png`}
+                  src={assetPath(`/assets/mind/onestep/sample-${String(index + 1).padStart(2, "0")}/final.png`)}
                   alt=""
                   loading="lazy"
                 />
@@ -358,7 +361,7 @@ export default function Home() {
         </div>
         <figure className="hero-figure">
           <img
-            src="/assets/mind/hero-manifold-v2.png"
+            src={assetPath("/assets/mind/hero-manifold-v2.png")}
             alt="A cartoon visualization of noisy tokens traveling along a folded data manifold and becoming a coherent image"
           />
           <figcaption>
@@ -391,7 +394,7 @@ export default function Home() {
         <figure className="method-figure">
           <div className="method-figure-scroll">
             <img
-              src="/assets/mind/figure1-extended.png"
+              src={assetPath("/assets/mind/figure1-extended.png")}
               alt="MIND overview showing manifold-aware training, multi-stage inference, one-step FD distillation, and one-step inference"
             />
           </div>
