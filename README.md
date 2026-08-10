@@ -1,3 +1,11 @@
+## Paper
+
+This repository provides the official implementation of MIND:
+
+[[ECCV 2026 Conference Version]](https://arxiv.org/abs/2606.00094)
+[[Extended Journal Manuscript]](https://xddgit.github.io/MIND/papers/MIND-journal.pdf)
+[[Project Page]](https://xddgit.github.io/MIND/)
+
 # ImageNet Generation and Evaluation
 
 This package contains the code and assets needed to reproduce MIND-B samples from the released checkpoint and evaluate them with FID, Inception Score, precision, and recall.
