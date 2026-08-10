@@ -309,11 +309,11 @@ export default function Home() {
         </nav>
         <a
           className="header-paper"
-          href="https://arxiv.org/abs/2606.00094"
+          href={assetPath("/papers/MIND-journal.pdf")}
           target="_blank"
           rel="noreferrer"
         >
-          Paper <ArrowIcon />
+          Journal Paper <ArrowIcon />
         </a>
       </header>
 
@@ -347,7 +347,15 @@ export default function Home() {
               target="_blank"
               rel="noreferrer"
             >
-              Read paper <ArrowIcon />
+              ECCV 2026 <ArrowIcon />
+            </a>
+            <a
+              className="secondary-action"
+              href={assetPath("/papers/MIND-journal.pdf")}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Journal Paper <ArrowIcon />
             </a>
             <a
               className="secondary-action"
@@ -558,7 +566,10 @@ export default function Home() {
         <h2>Model the manifold.<br />Then move through it.</h2>
         <div className="conclusion-actions">
           <a href="https://arxiv.org/abs/2606.00094" target="_blank" rel="noreferrer">
-            arXiv paper <ArrowIcon />
+            ECCV 2026 <ArrowIcon />
+          </a>
+          <a href={assetPath("/papers/MIND-journal.pdf")} target="_blank" rel="noreferrer">
+            Journal Paper <ArrowIcon />
           </a>
           <a href="https://github.com/xddgit/MIND" target="_blank" rel="noreferrer">
             GitHub code <ArrowIcon />
